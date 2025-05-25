@@ -13,7 +13,8 @@
 /out/
 
 # bolt
-/.bolt/
+/.bolt
+.bolt
 
 # production
 /build
