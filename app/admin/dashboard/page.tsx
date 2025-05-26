@@ -450,18 +450,27 @@ export default function AdminDashboard() {
               </div>
               
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Documents</h3>
-                <dl className="mt-2 space-y-2">
-                  <div>
-                    <dt className="text-sm text-gray-500">Numéro de pièce d'identité</dt>
-                    <dd>{selectedRequest.documentId}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">Numéro de justificatif de domicile</dt>
-                    <dd>{selectedRequest.justificatifId}</dd>
-                  </div>
-                </dl>
-              </div>
+  <h3 className="text-sm font-medium text-gray-500">Documents</h3>
+  <dl className="mt-2 space-y-2">
+    <div>
+      <dt className="text-sm text-gray-500">Type de pièce d'identité</dt>
+      <dd>{selectedRequest.documentType}</dd>
+    </div>
+    <div>
+      <dt className="text-sm text-gray-500">Numéro de pièce d'identité</dt>
+      <dd>{selectedRequest.documentId}</dd>
+    </div>
+    <div>
+      <dt className="text-sm text-gray-500">Type de justificatif de domicile</dt>
+      <dd>{selectedRequest.justificatifType}</dd>
+    </div>
+    <div>
+      <dt className="text-sm text-gray-500">Numéro de justificatif de domicile</dt>
+      <dd>{selectedRequest.justificatifId}</dd>
+    </div>
+  </dl>
+</div>
+
               
               <div className="mt-6">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Dates</h3>
