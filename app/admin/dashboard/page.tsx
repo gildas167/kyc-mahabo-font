@@ -6,20 +6,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { 
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow 
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "@/components/ui/table";
-import { 
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { 
-  CheckCircle, Clock, EyeIcon, LogOut, MoreHorizontal, Search, ShieldCheck, Trash2, XCircle 
+import {
+  CheckCircle, Clock, EyeIcon, LogOut, MoreHorizontal, Search, ShieldCheck, Trash2, XCircle
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Dialog, DialogContent, DialogDescription, DialogFooter, 
-  DialogHeader, DialogTitle, DialogTrigger 
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter,
+  DialogHeader, DialogTitle, DialogTrigger
 } from "@/components/ui/dialog";
 import { getAllKycRequests, getKycRequestById, updateKycStatus, deleteKycRequest } from "@/lib/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -47,7 +47,7 @@ interface KycRequestDetail extends KycRequest {
 export default function AdminDashboard() {
   const router = useRouter();
   const { toast } = useToast();
-  
+
   const [requests, setRequests] = useState<KycRequest[]>([]);
   const [filteredRequests, setFilteredRequests] = useState<KycRequest[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -64,7 +64,7 @@ export default function AdminDashboard() {
       router.push('/admin');
       return;
     }
-    
+
     setToken(storedToken);
     fetchRequests(storedToken);
   }, [router]);
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
         description: "Impossible de récupérer les demandes KYC. Veuillez vous reconnecter.",
         variant: "destructive",
       });
-      
+
       // If token is invalid or expired, redirect to login
       localStorage.removeItem('adminToken');
       router.push('/admin');
@@ -96,23 +96,23 @@ export default function AdminDashboard() {
 
   const filterRequests = () => {
     let filtered = [...requests];
-    
+
     // Filter by tab
     if (currentTab !== "all") {
       filtered = filtered.filter(req => req.status === currentTab);
     }
-    
+
     // Filter by search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(req => 
+      filtered = filtered.filter(req =>
         req.publicId.toLowerCase().includes(query) ||
         req.nom.toLowerCase().includes(query) ||
         req.prenoms.toLowerCase().includes(query) ||
         req.email.toLowerCase().includes(query)
       );
     }
-    
+
     setFilteredRequests(filtered);
   };
 
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
 
   const handleViewDetails = async (id: string) => {
     if (!token) return;
-    
+
     try {
       const data = await getKycRequestById(id, token);
       setSelectedRequest(data);
@@ -139,20 +139,20 @@ export default function AdminDashboard() {
 
   const handleUpdateStatus = async (id: string, status: string) => {
     if (!token) return;
-    
+
     try {
       await updateKycStatus(id, status, token);
-      
+
       toast({
         title: "Statut mis à jour",
         description: `La demande a été marquée comme ${status === 'approved' ? 'approuvée' : 'rejetée'}.`,
       });
-      
+
       // Update local state
-      setRequests(prev => 
+      setRequests(prev =>
         prev.map(req => req.id === id ? { ...req, status } : req)
       );
-      
+
       // Close details dialog
       setDetailsOpen(false);
     } catch (error) {
@@ -166,18 +166,18 @@ export default function AdminDashboard() {
 
   const handleDeleteRequest = async (id: string) => {
     if (!token) return;
-    
+
     try {
       await deleteKycRequest(id, token);
-      
+
       toast({
         title: "Demande supprimée",
         description: "La demande KYC a été supprimée avec succès.",
       });
-      
+
       // Update local state
       setRequests(prev => prev.filter(req => req.id !== id));
-      
+
       // Close details dialog
       setDetailsOpen(false);
     } catch (error) {
@@ -234,27 +234,27 @@ export default function AdminDashboard() {
           </Button>
         </div>
       </header>
-      
+
       <main className="flex-1 container mx-auto py-8 px-4">
         <div className="mb-8 flex flex-col md:flex-row justify-between md:items-center gap-4">
           <div>
             <h1 className="text-2xl font-bold mb-2">Tableau de bord</h1>
             <p className="text-gray-500">Gérez et traitez les demandes de vérification KYC</p>
           </div>
-          
+
           <div className="flex items-center">
             <div className="relative w-full md:w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-              <Input 
-                placeholder="Rechercher..." 
-                className="pl-8" 
+              <Input
+                placeholder="Rechercher..."
+                className="pl-8"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Card>
             <CardHeader className="pb-2">
@@ -265,7 +265,7 @@ export default function AdminDashboard() {
               <div className="text-3xl font-bold">{requests.length}</div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-lg">En attente</CardTitle>
@@ -277,7 +277,7 @@ export default function AdminDashboard() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-lg">Approuvées</CardTitle>
@@ -290,9 +290,9 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
         </div>
-        
-        <Tabs 
-          defaultValue="all" 
+
+        <Tabs
+          defaultValue="all"
           className="w-full"
           onValueChange={(value) => setCurrentTab(value)}
         >
@@ -302,7 +302,7 @@ export default function AdminDashboard() {
             <TabsTrigger value="approved">Approuvées</TabsTrigger>
             <TabsTrigger value="rejected">Rejetées</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value={currentTab}>
             <Card>
               <CardContent className="p-0">
@@ -373,7 +373,7 @@ export default function AdminDashboard() {
           </TabsContent>
         </Tabs>
       </main>
-      
+
       {/* Request Details Dialog */}
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
         <DialogContent className="max-w-2xl">
@@ -383,7 +383,7 @@ export default function AdminDashboard() {
               ID: {selectedRequest?.publicId}
             </DialogDescription>
           </DialogHeader>
-          
+
           {selectedRequest && (
             <div className="space-y-4">
               <div className="bg-gray-50 p-4 rounded-lg flex items-center space-x-4">
@@ -396,7 +396,7 @@ export default function AdminDashboard() {
                 {selectedRequest.status === "rejected" && (
                   <XCircle className="h-8 w-8 text-red-500" />
                 )}
-                
+
                 <div>
                   <div className="text-sm text-gray-500">Statut actuel</div>
                   <div className="font-medium">
@@ -406,7 +406,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Informations personnelles</h3>
@@ -429,7 +429,7 @@ export default function AdminDashboard() {
                     </div>
                   </dl>
                 </div>
-                
+
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Coordonnées</h3>
                   <dl className="mt-2 space-y-2">
@@ -448,30 +448,30 @@ export default function AdminDashboard() {
                   </dl>
                 </div>
               </div>
-              
-              <div>
-  <h3 className="text-sm font-medium text-gray-500">Documents</h3>
-  <dl className="mt-2 space-y-2">
-    <div>
-      <dt className="text-sm text-gray-500">Type de pièce d'identité</dt>
-      <dd>{selectedRequest.documentType}</dd>
-    </div>
-    <div>
-      <dt className="text-sm text-gray-500">Numéro de pièce d'identité</dt>
-      <dd>{selectedRequest.documentId}</dd>
-    </div>
-    <div>
-      <dt className="text-sm text-gray-500">Type de justificatif de domicile</dt>
-      <dd>{selectedRequest.justificatifType}</dd>
-    </div>
-    <div>
-      <dt className="text-sm text-gray-500">Numéro de justificatif de domicile</dt>
-      <dd>{selectedRequest.justificatifId}</dd>
-    </div>
-  </dl>
-</div>
 
-              
+              <div>
+                <h3 className="text-sm font-medium text-gray-500">Documents</h3>
+                <dl className="mt-2 space-y-2">
+                  <div>
+                    <dt className="text-sm text-gray-500">Type de pièce d'identité</dt>
+                    <dd>{selectedRequest.documentType}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-gray-500">Numéro de pièce d'identité</dt>
+                    <dd>{selectedRequest.documentId}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-gray-500">Type de justificatif de domicile</dt>
+                    <dd>{selectedRequest.justificatifType}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-gray-500">Numéro de justificatif de domicile</dt>
+                    <dd>{selectedRequest.justificatifId}</dd>
+                  </div>
+                </dl>
+              </div>
+
+
               <div className="mt-6">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Dates</h3>
                 <div className="bg-gray-50 p-3 rounded text-sm">
@@ -483,7 +483,7 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
-          
+
           <DialogFooter className="flex justify-between flex-row">
             {selectedRequest?.status === "pending" && (
               <div className="flex gap-2">
@@ -501,7 +501,7 @@ export default function AdminDashboard() {
                 </Button>
               </div>
             )}
-            
+
             <Button
               variant="outline"
               onClick={() => setDetailsOpen(false)}
